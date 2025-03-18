@@ -13,13 +13,13 @@ SECRET_KEY = 'django-insecure-^h$wy7tv7uz0pddrf(s_a*15w^c6b_ibc^@+edfk-_+ul8b=7^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Allow all hosts in development (change this for production environments)
 ALLOWED_HOSTS = ['*']  # Allow all hosts
 
-# CORS settings
+# CORS settings (Allow all origins)
 CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins (CORS headers)
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -27,14 +27,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'diffusion_app',
-    'rest_framework',
-    'corsheaders',  # Add this line for CORS
+    'diffusion_app',  # Your application
+    'rest_framework',  # Django Rest Framework
+    'corsheaders',  # CORS Headers package
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # Add this line for CORS middleware
+    'corsheaders.middleware.CorsMiddleware',  # CORS middleware should be high in the middleware stack
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
