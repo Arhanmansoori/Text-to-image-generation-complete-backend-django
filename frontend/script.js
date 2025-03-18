@@ -11,7 +11,10 @@ document.getElementById("generateBtn").addEventListener("click", function() {
     loadingText.style.display = "block";
     generatedImage.style.display = "none";
 
-    fetch("http://127.0.0.1:8000/api/generate/", {
+    // Replace the URL with your ngrok URL
+    let ngrokUrl = "https://1f94-34-90-168-245.ngrok-free.app";  // Your ngrok URL
+
+    fetch(`${ngrokUrl}/api/generate/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: prompt })
@@ -20,7 +23,8 @@ document.getElementById("generateBtn").addEventListener("click", function() {
     .then(data => {
         loadingText.style.display = "none";
         if (data.image_url) {
-            generatedImage.src = `http://127.0.0.1:8000${data.image_url}`;
+            // Update the image URL with the full ngrok URL path
+            generatedImage.src = `${ngrokUrl}${data.image_url}`;
             generatedImage.style.display = "block";
         } else {
             alert("Error generating image!");
