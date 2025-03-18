@@ -1,37 +1,48 @@
-document.getElementById("generateBtn").addEventListener("click", function() {
-    let prompt = document.getElementById("promptInput").value;
+document.getElementById('generateForm').addEventListener('submit', function (e) {
+    e.preventDefault();  // Prevent the form from refreshing the page
+
+    const prompt = document.getElementById('prompt').value;
     if (!prompt) {
-        alert("Please enter a prompt!");
+        alert("Please enter a prompt.");
         return;
     }
 
-    let loadingText = document.getElementById("loadingText");
-    let generatedImage = document.getElementById("generatedImage");
+    // Clear previous image
+    document.getElementById('imageContainer').innerHTML = '';
 
-    loadingText.style.display = "block";
-    generatedImage.style.display = "none";
+    // Show loading text
+    const loadingMessage = document.createElement('p');
+    loadingMessage.innerText = 'Generating image... Please wait.';
+    document.getElementById('imageContainer').appendChild(loadingMessage);
 
-    // Replace the URL with your ngrok URL
-    let ngrokUrl = "https://1f94-34-90-168-245.ngrok-free.app";  // Your ngrok URL
-
-    fetch(`${ngrokUrl}/api/generate/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: prompt })
+    // API request to generate image
+    fetch('https://1f94-34-90-168-245.ngrok-free.app/api/generate/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            prompt: prompt
+        })
     })
     .then(response => response.json())
     .then(data => {
-        loadingText.style.display = "none";
-        if (data.image_url) {
-            // Update the image URL with the full ngrok URL path
-            generatedImage.src = `${ngrokUrl}${data.image_url}`;
-            generatedImage.style.display = "block";
+        if (data.error) {
+            // Show error message if API call fails
+            document.getElementById('imageContainer').innerHTML = `<p id="error-message">${data.error}</p>`;
         } else {
-            alert("Error generating image!");
+            // Create image element and set its source as the base64 data
+            const img = new Image();
+            img.id = "generatedImage";
+            img.src = `data:image/png;base64,${data.image_data}`;
+
+            // Clear loading message and append the image
+            document.getElementById('imageContainer').innerHTML = '';
+            document.getElementById('imageContainer').appendChild(img);
         }
     })
     .catch(error => {
-        loadingText.style.display = "none";
-        alert("Error: " + error);
+        document.getElementById('imageContainer').innerHTML = `<p id="error-message">An error occurred. Please try again.</p>`;
+        console.error('Error:', error);
     });
 });

@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stable Diffusion Image Generator</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Image Generator</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h1>Stable Diffusion Image Generator</h1>
-        <input type="text" id="promptInput" placeholder="Enter your prompt...">
-        <button id="generateBtn">Generate Image</button>
-        <div id="imageContainer">
-            <p id="loadingText" style="display: none;">Generating image...</p>
-            <img id="generatedImage" style="display: none;" />
+        <form id="generateForm">
+            <input type="text" id="prompt" placeholder="Enter a prompt..." required />
+            <button type="submit">Generate Image</button>
+        </form>
+        <div id="imageContainer" class="image-container">
+            <!-- Generated image will appear here -->
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
