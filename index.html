@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stable Diffusion Image Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        input, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        img {
+            margin-top: 20px;
+            max-width: 100%;
+            border: 2px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stable Diffusion Text-to-Image Generator</h1>
+    <input type="text" id="prompt" placeholder="Enter your prompt">
+    <button onclick="generateImage()">Generate Image</button>
+    <br>
+    <input type="text" id="imageName" placeholder="Enter image name">
+    <button onclick="fetchImage()">Fetch Image</button>
+    <br>
+    <img id="generatedImage" style="display: none;" alt="Generated Image">
+    
+    <script>
+        const API_BASE_URL = "https://278a-34-125-42-69.ngrok-free.app";
+
+        function generateImage() {
+            const prompt = document.getElementById("prompt").value;
+            if (!prompt) {
+                alert("Please enter a prompt.");
+                return;
+            }
+            
+            fetch(`${API_BASE_URL}/api/generate/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.image_url) {
+                    document.getElementById("imageName").value = data.image_url.split("/").pop();
+                    fetchImage();
+                } else {
+                    alert("Error generating image.");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        function fetchImage() {
+            const imageName = document.getElementById("imageName").value;
+            if (!imageName) {
+                alert("Please enter an image name.");
+                return;
+            }
+            
+            const imageUrl = `${API_BASE_URL}/media/generated_images/${imageName}`;
+            document.getElementById("generatedImage").src = imageUrl;
+            document.getElementById("generatedImage").style.display = "block";
+        }
+    </script>
+</body>
+</html>
