@@ -51,3 +51,12 @@ def get_generated_image(request):
         return Response(serializer.data)
     except GeneratedImage.DoesNotExist:
         return Response({"error": "Image not found"}, status=404)
+
+@api_view(['GET'])
+def list_generated_images(request):
+    try:
+        image = GeneratedImage.objects.get(id=1)
+        serializer = GeneratedImageSerializer(image)
+        return Response([serializer.data])  # Return as a list to match the expected response format
+    except GeneratedImage.DoesNotExist:
+        return Response([], status=200)  # Return an empty list if no image is found
