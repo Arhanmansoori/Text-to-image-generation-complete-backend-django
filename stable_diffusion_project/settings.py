@@ -19,6 +19,17 @@ ALLOWED_HOSTS = ['*']  # Allow all hosts
 # CORS settings (Allow all origins)
 CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins (CORS headers)
 
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+    'accept',
+    'x-requested-with'
+]
+
+CORS_EXPOSE_HEADERS = ['Content-Length', 'Content-Disposition']
+CORS_ALLOW_METHODS = ['GET', 'POST', 'OPTIONS']
+
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',

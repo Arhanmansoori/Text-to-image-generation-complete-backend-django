@@ -8,41 +8,48 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin: 20px;
+            padding: 20px;
         }
-        input, button {
-            margin: 10px;
+        input {
+            width: 60%;
             padding: 10px;
-            font-size: 16px;
+            margin: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
         }
         img {
             margin-top: 20px;
             max-width: 100%;
-            border: 2px solid #000;
+            height: auto;
+            border: 2px solid #ddd;
+            padding: 10px;
+            display: none; /* Hide initially */
         }
     </style>
 </head>
 <body>
-    <h1>Stable Diffusion Text-to-Image Generator</h1>
+    <h2>Stable Diffusion Image Generator</h2>
     <input type="text" id="prompt" placeholder="Enter your prompt">
+    <br>
     <button onclick="generateImage()">Generate Image</button>
+    <button onclick="getImage()">Get Image</button>
     <br>
-    <input type="text" id="imageName" placeholder="Enter image name">
-    <button onclick="fetchImage()">Fetch Image</button>
-    <br>
-    <img id="generatedImage" style="display: none;" alt="Generated Image">
-    
+    <img id="generatedImage" src="" alt="Generated Image will appear here">
+
     <script>
-        const API_BASE_URL = "https://278a-34-125-42-69.ngrok-free.app";
+        const API_BASE_URL = "https://0487-34-143-247-99.ngrok-free.app/api";
 
         function generateImage() {
             const prompt = document.getElementById("prompt").value;
             if (!prompt) {
-                alert("Please enter a prompt.");
+                alert("Please enter a prompt!");
                 return;
             }
             
-            fetch(`${API_BASE_URL}/api/generate/`, {
+            fetch(`${API_BASE_URL}/generate/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ prompt })
@@ -50,25 +57,34 @@
             .then(response => response.json())
             .then(data => {
                 if (data.image_url) {
-                    document.getElementById("imageName").value = data.image_url.split("/").pop();
-                    fetchImage();
+                    alert("Image generated successfully! Click 'Get Image' to view it.");
                 } else {
-                    alert("Error generating image.");
+                    alert("Error generating image. Please try again.");
                 }
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => {
+                console.error("Error generating image:", error);
+                alert("Failed to generate image. Check the console for details.");
+            });
         }
 
-        function fetchImage() {
-            const imageName = document.getElementById("imageName").value;
-            if (!imageName) {
-                alert("Please enter an image name.");
-                return;
-            }
+        function getImage() {
+            const imgElement = document.getElementById("generatedImage");
+            const imgUrl = `https://0487-34-143-247-99.ngrok-free.app/media/generated_images/generated_ai_image.png?timestamp=${new Date().getTime()}`;
             
-            const imageUrl = `${API_BASE_URL}/media/generated_images/${imageName}`;
-            document.getElementById("generatedImage").src = imageUrl;
-            document.getElementById("generatedImage").style.display = "block";
+            fetch(imgUrl, { method: "GET", mode: "cors" })
+            .then(response => {
+                if (!response.ok) throw new Error("Failed to fetch image");
+                return response.blob();
+            })
+            .then(blob => {
+                imgElement.src = URL.createObjectURL(blob);
+                imgElement.style.display = "block"; // Show the image
+            })
+            .catch(error => {
+                console.error("Error fetching image:", error);
+                alert("Failed to fetch image. Check console for details.");
+            });
         }
     </script>
 </body>
